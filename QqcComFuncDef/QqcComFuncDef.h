@@ -27,6 +27,89 @@
 //App应用名称
 #define name_diplay_app_qqc [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"]
 
+//获取bundle
+#define bundle_with_name(_name_) [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:_name_ ofType:@"bundle"]]
+
+//从某个bundle中获取nib
+#define nib_with_name_from_somebundle(_nibName_, _bundleName_) \
+UINib* nib = nil; \
+if (str_is_exist_qqc(_bundleName_)) { \
+    nib = [UINib nibWithNibName:_nibName_ bundle:bundle_with_name(_bundleName_)]; \
+}else{ \
+    nib = [UINib nibWithNibName:_nibName_ bundle:[NSBundle mainBundle]]; \
+}\
+return nib;
+
+//通过名字获取image(有缓存[NSBundle mainBundle])
+#define image_with_name(_name_) [UIImage imageNamed:_name_];
+
+//通过名字,从文件中获取image（无缓存[NSBundle mainBundle]）
+#define image_from_file_with_name(_name_) \
+UIImage* imageRet;  \
+NSString* strName;  \
+NSString* strType;  \
+NSRange rang = [strFullName rangeOfString:@"." options:NSBackwardsSearch];  \
+if (rang.length > 0)    \
+{   \
+    strName = [_name_ substringToIndex:rang.location];  \
+    \
+    if ([UIScreen mainScreen].scale == 2) { \
+        strName = [strName stringByAppendingString:@"@2x"]; \
+    }   \
+    else if([UIScreen mainScreen].scale == 3)   \
+    {   \
+        strName = [strName stringByAppendingString:@"@3x"]; \
+    }   \
+        \
+    strType = [strFullName substringFromIndex:rang.location+1]; \
+}else{  \
+    strName = strFullName;  \
+    strType = @"png";   \
+}   \
+    \
+NSString* strImgPath = [[NSBundle mainBundle] pathForResource:strName ofType:strType];  \
+imageRet = [UIImage imageWithContentsOfFile:strImgPath];    \
+return imageRet;
+
+
+//从某个bundle中获取image（有缓存,某个bundle）
+#define image_with_name_from_somebundle(_imageName_, _bundleName_)  \
+UIImage* imageRet = nil;    \
+NSBundle* bundle = bundle_with_name(_bundleName_);  \
+if (bundle) {   \
+    imageRet = [UIImage imageNamed:_imageName_ inBundle:bundle compatibleWithTraitCollection:nil];  \
+}   \
+    \
+return imageRet;
+
+//从某个bundle中通过名字,从文件中获取image（无缓存,某个bundle）
+#define image_from_file_with_name_from_somebundle(_imageName_, _bundleName_)  \
+UIImage* imageRet;  \
+NSString* strName;  \
+NSString* strType;  \
+NSRange rang = [strFullName rangeOfString:@"." options:NSBackwardsSearch];  \
+if (rang.length > 0)    \
+{   \
+strName = [_name_ substringToIndex:rang.location];  \
+\
+if ([UIScreen mainScreen].scale == 2) { \
+strName = [strName stringByAppendingString:@"@2x"]; \
+}   \
+else if([UIScreen mainScreen].scale == 3)   \
+{   \
+strName = [strName stringByAppendingString:@"@3x"]; \
+}   \
+\
+strType = [strFullName substringFromIndex:rang.location+1]; \
+}else{  \
+strName = strFullName;  \
+strType = @"png";   \
+}   \
+\
+NSString* strImgPath = [bundle_with_name(_bundleName_) pathForResource:strName ofType:strType];  \
+imageRet = [UIImage imageWithContentsOfFile:strImgPath];    \
+return imageRet;
+
 //判断是否为iphone4
 #define is_iphone4_qqc() (fabs((double)[[UIScreen mainScreen] bounds].size.height-(double)480.f ) < DBL_EPSILON )
 
