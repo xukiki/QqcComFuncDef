@@ -24,6 +24,9 @@
 //类名称
 #define name_class_qqc NSStringFromClass([self class])
 
+//cell的Identifier
+#define cell_identity(_cellName_) [NSString stringWithFormat:@"%Identity", _cellName_]
+
 //App应用名称
 #define name_diplay_app_qqc [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"]
 
